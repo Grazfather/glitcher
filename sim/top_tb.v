@@ -1,10 +1,12 @@
+`timescale 1ns / 1ps
+
 module top_tb();
 
 reg tb_clk = 1'b1;
 
 always
 begin
-    #5 tb_clk <= ~tb_clk;
+    #41.6 tb_clk <= ~tb_clk;
 end
 
 wire tb_uart;
@@ -17,6 +19,12 @@ top tb_top (
 reg [7:0] tx_data;
 reg tx_en = 1'b0;
 wire tx_rdy;
+
+initial
+begin
+	$dumpfile("top_tb.vcd");
+	$dumpvars(0, top_tb);
+end
 
 uart_tx txi (
     .clk(tb_clk),
@@ -172,7 +180,7 @@ begin
     // wait(!tx_rdy);
     // @(posedge tb_clk);
 
-    // Set pattern ok
+    #300 $finish;
 end
 
 endmodule
