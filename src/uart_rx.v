@@ -1,4 +1,4 @@
-`include "uart_defs.v"
+`include "src/uart_defs.v"
 
 /*
  * Copyright (c) 2017, Toothless Consulting UG (haftungsbeschraenkt)

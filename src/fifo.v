@@ -42,15 +42,20 @@ module fifo (
     output wire         valid
 );
 
-fifo_generator_0 fifo_generator_0i (
-    .clk(clk),
-    .srst(rst),
-    .din(data_in),
-    .wr_en(wen),
-    .rd_en(ren),
-    .dout(data_out),
-    .empty(empty),
-    .valid(valid)
+assign valid = ren;
+
+fifo_sync_ram #(
+	.WIDTH(8)
+	) fifoi
+	(
+	.clk(clk),
+	.rst(rst),
+	.wr_data(data_in),
+	.wr_ena(wen),
+	.wr_full(full),
+	.rd_data(data_out),
+	.rd_ena(ren),
+	.rd_empty(empty)
 );
 
 endmodule

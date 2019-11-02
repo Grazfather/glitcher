@@ -38,28 +38,28 @@ module top
     input wire          board1_rx,
     output wire         board1_tx,
     output wire         board1_rst,
-    output wire         led,
-    output wire [13:0]  debug_header,
+    output wire         LED1,
+    output wire [7:0]  debug_header,
     output wire         vout
 );
 
 // Combinatorial logic
 // assign board1_tx = ftdi_rx;
 assign ftdi_tx = board1_rx;
+
 assign debug_header = {
-    5'd0,
-    glitch_en,  // IO8
-    vout,       // IO7
-    clk,        // IO6
-    board1_rst, // IO5
-    board1_rx,  // IO4
-    board1_tx,  // IO3
-    clk,        // IO2
-    ftdi_rx,    // IO1
-    ftdi_tx     // IO0
+    glitch_en,
+    vout,
+    clk,
+    board1_rst,
+    board1_rx,
+    board1_tx,
+    clk,
+    ftdi_rx,
+    ftdi_tx
 };
 
-assign led = vout;
+assign LED1 = vout;
 
 wire        rst;
 wire        glitch_en;
