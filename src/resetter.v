@@ -38,16 +38,16 @@ module resetter (
 
 assign rst_out = shift[0];
 
-reg [63:0] shift;
+reg [7:0] shift;
 
 always @(posedge clk)
 begin
-    shift <= {1'b1, shift[63:1]};
+    shift <= {1'b1, shift[7:1]};
 
     if (rst)
     begin
         // reset
-        shift <= 64'd0;
+        shift <= 8'd0;
     end
 end
 
