@@ -130,7 +130,7 @@ begin
                 begin
                     state <= STATE_DATA;
                     byte_cnt <= rx_data;
-                    if(rx_data == 8'd0)
+                    if(rx_data == 8'h00)
                     begin
                         state <= STATE_SPECIAL;
                     end
@@ -142,7 +142,7 @@ begin
                 begin
                     state <= STATE_IDLE;
                     case(rx_data)
-                        8'd0:
+                        8'h00:
                         begin
                             glitch_en <= 1'b1;
                         end
@@ -219,7 +219,7 @@ begin
                     end
                 end
             end
-            STATE_DELAY0:   
+            STATE_DELAY0:
             begin
                 if(rx_valid)
                 begin
@@ -227,7 +227,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY1:   
+            STATE_DELAY1:
             begin
                 if(rx_valid)
                 begin
@@ -235,7 +235,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY2:   
+            STATE_DELAY2:
             begin
                 if(rx_valid)
                 begin
@@ -243,7 +243,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY3:   
+            STATE_DELAY3:
             begin
                 if(rx_valid)
                 begin
@@ -251,7 +251,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY4:   
+            STATE_DELAY4:
             begin
                 if(rx_valid)
                 begin
@@ -259,7 +259,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY5:   
+            STATE_DELAY5:
             begin
                 if(rx_valid)
                 begin
@@ -267,7 +267,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY6:   
+            STATE_DELAY6:
             begin
                 if(rx_valid)
                 begin
@@ -275,7 +275,7 @@ begin
                     state <= STATE_IDLE;
                 end
             end
-            STATE_DELAY7:   
+            STATE_DELAY7:
             begin
                 if(rx_valid)
                 begin

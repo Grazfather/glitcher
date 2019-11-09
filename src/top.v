@@ -39,7 +39,7 @@ module top
     output wire         board1_tx,
     output wire         board1_rst,
     output wire         LED1,
-    output wire [7:0]  debug_header,
+    output wire [7:0]   debug_header,
     output wire         vout
 );
 
@@ -72,6 +72,8 @@ wire dout;
 
 assign board1_tx = passthrough ? ftdi_rx : dout;
 
+// Receives commands from host uart and parses out commands intended for the
+// glitcher, passing through everything else
 cmd cmdi (
     .clk(clk),
     .din(ftdi_rx),
