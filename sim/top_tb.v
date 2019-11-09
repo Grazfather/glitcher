@@ -4,11 +4,6 @@ module top_tb();
 
 reg tb_clk = 1'b1;
 
-always
-begin
-    #41.6 tb_clk <= ~tb_clk;
-end
-
 wire tb_uart;
 
 top tb_top (
@@ -16,15 +11,20 @@ top tb_top (
     .ftdi_rx(tb_uart)
 );
 
-reg [7:0] tx_data;
-reg tx_en = 1'b0;
-wire tx_rdy;
-
 initial
 begin
 	$dumpfile("top_tb.vcd");
 	$dumpvars(0, top_tb);
 end
+
+always
+begin
+    #41.6 tb_clk <= ~tb_clk;
+end
+
+reg [7:0] tx_data;
+reg tx_en = 1'b0;
+wire tx_rdy;
 
 uart_tx txi (
     .clk(tb_clk),

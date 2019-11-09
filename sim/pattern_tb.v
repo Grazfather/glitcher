@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module pattern_tb();
 
 reg tb_clk = 1'b1;
@@ -16,9 +18,15 @@ pattern tb_pattern (
     .rdy(rdy)
 );
 
+initial
+begin
+	$dumpfile("pattern_tb.vcd");
+	$dumpvars(0, pattern_tb);
+end
+
 always
 begin
-    #5 tb_clk <= ~tb_clk;
+    #41.6 tb_clk <= ~tb_clk;
 end
 
 initial
@@ -34,6 +42,8 @@ begin
     tb_data <= 8'haa;
     @(posedge tb_clk);
     tb_en <= 1'b0;
+
+    #100 $finish;
 end
 
 endmodule
