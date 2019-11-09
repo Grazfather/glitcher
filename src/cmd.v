@@ -81,12 +81,13 @@ uart_tx txi (
     .rst(rst),
     .dout(dout),
     .data_in(tx_data),
-    .en(tx_en),
+    .en(!fifo_empty),
     .rdy(tx_rdy)
 );
 
 reg         fifo_en = 1'b0;
 reg [7:0]   fifo_data;
+wire fifo_empty;
 
 fifo fifoi (
     .clk(clk),
@@ -94,7 +95,7 @@ fifo fifoi (
     .data_in(fifo_data),
     .wen(fifo_en),
     .ren(tx_rdy),
-    .valid(tx_en),
+    .empty(fifo_empty),
     .data_out(tx_data)
 );
 

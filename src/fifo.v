@@ -38,11 +38,8 @@ module fifo (
     input wire          ren,
     output wire [7:0]   data_out,
     output wire         full,
-    output wire         empty,
-    output wire         valid
+    output wire         empty
 );
-
-assign valid = ren;
 
 fifo_sync_ram #(
 	.WIDTH(8)
