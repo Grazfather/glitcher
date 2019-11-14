@@ -40,6 +40,8 @@ module top
     output wire         board1_rst,
     output wire         LED1,
     output wire [7:0]   debug_header,
+    output wire [6:0]   seg,
+    output wire         ca,
     output wire         vout
 );
 
@@ -58,6 +60,29 @@ assign debug_header = {
     ftdi_rx,
     ftdi_tx
 };
+
+nibble_to_seven_seg segi0 (
+    .nibblein(pulse_width[7:4]),
+    .segout(nib0)
+);
+
+wire [7:0] rx_data;
+wire rx_valid;
+
+nibble_to_seven_seg segi1 (
+    .nibblein(pulse_width[3:0]),
+    .segout(nib1)
+);
+
+wire [6:0] nib0, nib1;
+
+seven_seg_mux dmuxi (
+    .clk(clk),
+    .disp0(nib0),
+    .disp1(nib1),
+    .segout(seg),
+    .disp_sel(ca)
+);
 
 assign LED1 = vout;
 
