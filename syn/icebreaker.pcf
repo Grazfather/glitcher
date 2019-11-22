@@ -106,7 +106,7 @@ set_io -nowarn debug_header[7]       28
 # Board control on PMOD 2
 set_io -nowarn board1_rx       27
 set_io -nowarn board1_tx       25
-set_io -nowarn board1_rst       21
+set_io -nowarn board1_rst      21
 set_io -nowarn vout       19
 set_io -nowarn P2_7       26
 set_io -nowarn P2_8       23

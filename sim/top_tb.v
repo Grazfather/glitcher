@@ -58,6 +58,27 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
 
+    // Reset the target board
+    #1000;
+    @(posedge tb_clk);
+    // -- cmd
+    tx_data <= 8'h00;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+    @(posedge tb_clk);
+    // -- cmd rst board
+    tx_data <= 8'hfe;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
     // Configure width
     #1000
     @(posedge tb_clk);
@@ -151,58 +172,6 @@ begin
     wait(tx_rdy);
     @(posedge tb_clk);
 
-    // send 5 bytes through
-    #1000
-    @(posedge tb_clk);
-    // -- length 5
-    tx_data <= 8'd5;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-    @(posedge tb_clk);
-    tx_data <= 8'hff;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-    @(posedge tb_clk);
-    tx_data <= 8'h55;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-    @(posedge tb_clk);
-    tx_data <= 8'h00;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-    @(posedge tb_clk);
-    tx_data <= 8'haa;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-    @(posedge tb_clk);
-    tx_data <= 8'h00;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-
     // Enable glitch
     @(posedge tb_clk);
     // -- cmd
@@ -214,8 +183,174 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
     @(posedge tb_clk);
-    // -- cmd glitch enable
-     //-- cmd board reset
+    //-- cmd glitch enable
+    tx_data <= 8'h00;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    // send "Synchronized\r\n" through
+    #1000
+    @(posedge tb_clk);
+    // -- length 14
+    tx_data <= 8'h0e;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h53; // 'S'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h79; // 'y'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h6e; // 'n'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h63; // 'c'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h68; // 'h'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h72; // 'r'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h6f; // 'o'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h6e; // 'n'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h69; // 'i'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h7a; // 'z'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h65; // 'e'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h64; // 'd'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h0d; // '\r'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h0a; // '\n'
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h00;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    // Reset board
+    @(posedge tb_clk);
+    // -- cmd
+    tx_data <= 8'h00;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+    @(posedge tb_clk);
+    //-- cmd board reset
     tx_data <= 8'hfe;
     tx_en <= 1'b1;
     @(posedge tb_clk);

@@ -38,7 +38,8 @@ module top
     input wire          board1_rx,
     output wire         board1_tx,
     output wire         board1_rst,
-    output wire         LED1,
+    output wire         LEDR_N,
+    output wire         LEDG_N,
     output wire [7:0]   debug_header,
     output wire [6:0]   seg,
     output wire         ca,
@@ -46,7 +47,7 @@ module top
 );
 
 // Combinatorial logic
-// assign board1_tx = ftdi_rx;
+// -- Pass through everything from the target to the host
 assign ftdi_tx = board1_rx;
 
 assign debug_header = {
@@ -62,7 +63,7 @@ assign debug_header = {
 };
 
 nibble_to_seven_seg segi0 (
-    .nibblein(pulse_width[7:4]),
+    .nibblein(pulse_width[3:0]),
     .segout(nib0)
 );
 
@@ -70,7 +71,7 @@ wire [7:0] rx_data;
 wire rx_valid;
 
 nibble_to_seven_seg segi1 (
-    .nibblein(pulse_width[3:0]),
+    .nibblein(pulse_width[7:4]),
     .segout(nib1)
 );
 
@@ -84,7 +85,8 @@ seven_seg_mux dmuxi (
     .disp_sel(ca)
 );
 
-assign LED1 = vout;
+assign LEDG_N = board1_tx;
+assign LEDR_N = board1_rx;
 
 wire        rst;
 wire        glitch_en;
