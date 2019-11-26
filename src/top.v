@@ -40,7 +40,6 @@ module top
     output wire         board1_rst,
     output wire         LEDR_N,
     output wire         LEDG_N,
-    output wire [7:0]   debug_header,
     output wire [6:0]   seg,
     output wire         ca,
     output wire         vout
@@ -50,29 +49,16 @@ module top
 // -- Pass through everything from the target to the host
 assign ftdi_tx = board1_rx;
 
-assign debug_header = {
-    glitch_en,
-    vout,
-    clk,
-    board1_rst,
-    board1_rx,
-    board1_tx,
-    clk,
-    ftdi_rx,
-    ftdi_tx
-};
-
-nibble_to_seven_seg segi0 (
-    .nibblein(pulse_width[3:0]),
-    .segout(nib0)
+// High nibble
+nibble_to_seven_seg segi1 (
+    .nibblein(delay[7:4]),
+    .segout(nib1)
 );
 
-wire [7:0] rx_data;
-wire rx_valid;
-
-nibble_to_seven_seg segi1 (
-    .nibblein(pulse_width[7:4]),
-    .segout(nib1)
+// Low nibble
+nibble_to_seven_seg segi0 (
+    .nibblein(delay[3:0]),
+    .segout(nib0)
 );
 
 wire [6:0] nib0, nib1;
