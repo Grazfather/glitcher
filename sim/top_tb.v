@@ -184,7 +184,7 @@ begin
     wait(tx_rdy);
     @(posedge tb_clk);
     //-- cmd glitch enable
-    tx_data <= 8'h00;
+    tx_data <= 8'hfc;
     tx_en <= 1'b1;
     @(posedge tb_clk);
     tx_en <= 1'b0;

@@ -8,10 +8,13 @@ import sys
 import re
 
 from pylibftdi import Device, Driver, INTERFACE_B
+from sty import fg
+# cb = colour bracket, ci colour info, cv colour value, cc colour clean
+cc, cb, ci, cv = fg.rs, fg.da_white, fg.green, fg.yellow
 
 CMD_FPGA_RESET = b"\x00\xff"
 CMD_BOARD_RESET = b"\x00\xfe"
-CMD_GLITCH = b"\x00\x00"
+CMD_GLITCH = b"\x00\xfc"
 
 passthrough = False
 
@@ -54,7 +57,7 @@ def synchronize():
             continue
 
         break
-    print("Synced!")
+    print(f"{cv}Synced{cc}!")
 
 
 def read_address(address, length):
@@ -71,8 +74,12 @@ def read_address(address, length):
     # Check if command succeeded.
     if b"\r0" in result:
         board_write(b"OK\r\n")
-        expect_read(dev, b"OK\r\n")
-        return result
+        try:
+            expect_read(dev, b"OK\r\n")
+        except Exception:
+            return None
+        else:
+            return result
 
     return None
 
@@ -105,7 +112,7 @@ def glitch():
 
 
 def board_write(msg):
-    print("Writing [" + repr(msg) + "]")
+    # print("Writing [" + repr(msg) + "]")
     if not passthrough:
         length = struct.pack("B", len(msg))
         msg = length + msg
@@ -129,7 +136,7 @@ def get_cmd_pulse_width(width):
     if(width < 256):
         return b"\x00\x10" + struct.pack("B", width)
     else:
-        print("ERROR, invalid pulse_wdith")
+        print("ERROR, invalid pulse_width")
         exit(1)
 
 #8'h11:
@@ -201,13 +208,13 @@ def uu_decode(uudata):
 
 
 def unlock(delay_range, width_range):
-    for delay in range(delay_range[0], delay_range[1]):
-        for width in range (width_range[0], width_range[1]):
-            sys.stdout.write("[w:%02d,d:%010d]: " % (width, delay))
+    for delay in delay_range:
+        for width in width_range:
+            sys.stdout.write(f"{cb}[{ci}width{cc}:{cv}{width:04d}{cc}, {ci}delay{cc}:{cv}{delay:04d}{cb}]{cc}\n")
             cmd = get_cmd_pulse_width(width)
             cmd += get_cmd_pulse_cnt(0)
             cmd += get_cmd_delay(delay)
-            cmd += CMD_BOARD_RESET
+            cmd += CMD_GLITCH
             dev.write(cmd)
 
             synchronize()
@@ -215,6 +222,8 @@ def unlock(delay_range, width_range):
             crp = test_crp()
             if crp:
                 return crp
+
+    raise Exception("No luck")
 
 if __name__ == "__main__":
     with Device(mode="b", interface_select=INTERFACE_B) as dev:

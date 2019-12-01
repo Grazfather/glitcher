@@ -44,20 +44,20 @@ module cmd (
     output wire         dout
 );
 
-parameter [3:0] STATE_IDLE          = 4'd0;
-parameter [3:0] STATE_SPECIAL       = 4'd1;
-parameter [3:0] STATE_DATA          = 4'd2;
-parameter [3:0] STATE_DELAY0        = 4'd3;
-parameter [3:0] STATE_DELAY1        = 4'd4;
-parameter [3:0] STATE_DELAY2        = 4'd5;
-parameter [3:0] STATE_DELAY3        = 4'd6;
-parameter [3:0] STATE_DELAY4        = 4'd7;
-parameter [3:0] STATE_DELAY5        = 4'd8;
-parameter [3:0] STATE_DELAY6        = 4'd9;
-parameter [3:0] STATE_DELAY7        = 4'd10;
-parameter [3:0] STATE_PULSE_WIDTH   = 4'd11;
-parameter [3:0] STATE_PULSE_CNT     = 4'd12;
-parameter [3:0] STATE_PWM           = 4'd13;
+parameter [3:0] STATE_IDLE          = 4'h0;
+parameter [3:0] STATE_SPECIAL       = 4'h1;
+parameter [3:0] STATE_DATA          = 4'h2;
+parameter [3:0] STATE_DELAY0        = 4'h3;
+parameter [3:0] STATE_DELAY1        = 4'h4;
+parameter [3:0] STATE_DELAY2        = 4'h5;
+parameter [3:0] STATE_DELAY3        = 4'h6;
+parameter [3:0] STATE_DELAY4        = 4'h7;
+parameter [3:0] STATE_DELAY5        = 4'h8;
+parameter [3:0] STATE_DELAY6        = 4'h9;
+parameter [3:0] STATE_DELAY7        = 4'hA;
+parameter [3:0] STATE_PULSE_WIDTH   = 4'hB;
+parameter [3:0] STATE_PULSE_CNT     = 4'hC;
+parameter [3:0] STATE_PWM           = 4'hD;
 
 reg [3:0] state = STATE_IDLE;
 
@@ -109,9 +109,9 @@ begin
     begin
         state <= STATE_IDLE;
         pulse_width <= 8'd0;
-        pulse_cnt = 8'd0;
-        delay = 64'd0;
-        pwm = 8'hff;
+        pulse_cnt <= 8'd0;
+        delay <= 64'd0;
+        pwm <= 8'hff;
         passthrough <= 1'b0;
     end
     else begin
@@ -142,10 +142,6 @@ begin
                 begin
                     state <= STATE_IDLE;
                     case(rx_data)
-                        8'h00:
-                        begin
-                            glitch_en <= 1'b1;
-                        end
                         8'h10:
                         begin
                             state <= STATE_PULSE_WIDTH;
@@ -189,6 +185,10 @@ begin
                         8'h40:
                         begin
                             state <= STATE_PWM;
+                        end
+                        8'hfc:
+                        begin
+                            glitch_en <= 1'b1;
                         end
                         8'hfd:
                         begin
