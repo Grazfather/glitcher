@@ -36,9 +36,9 @@ module top
     input wire          ext_clk,
     input wire          ftdi_rx,
     output wire         ftdi_tx,
-    input wire          board1_rx,
-    output wire         board1_tx,
-    output wire         board1_rst,
+    input wire          o_board_rx,
+    output wire         o_board_tx,
+    output wire         o_board_rst,
     output wire         LEDR_N,
     output wire         LEDG_N,
     output wire [6:0]   seg0,
@@ -50,7 +50,7 @@ module top
 
 // Combinatorial logic
 // -- Pass through everything from the target to the host
-assign ftdi_tx = board1_rx;
+assign ftdi_tx = o_board_rx;
 
 // High nibble
 nibble_to_seven_seg segi0_1 (
@@ -105,8 +105,8 @@ pll plli (
     .fast_clk_out(fast_clk)
 );
 
-assign LEDG_N = board1_tx;
-assign LEDR_N = board1_rx;
+assign LEDG_N = o_board_tx;
+assign LEDR_N = o_board_rx;
 
 wire        rst;
 wire        glitch_en;
@@ -117,7 +117,7 @@ wire board_rst;
 wire passthrough;
 wire dout;
 
-assign board1_tx = passthrough ? ftdi_rx : dout;
+assign o_board_tx = passthrough ? ftdi_rx : dout;
 
 // Receives commands from host uart and parses out commands intended for the
 // glitcher, passing through everything else
@@ -151,7 +151,7 @@ wire delay_rdy;
 delay delayi (
     .clk(clk),
     .rst(rst),
-    .en(board_rst || glitch_en),
+    .en(glitch_en),
     .delay(delay),
     .rdy(delay_rdy)
 );
@@ -161,7 +161,7 @@ wire trigger_valid;
 trigger triggeri (
     .clk(clk),
     .rst(rst),
-    .en(board_rst || glitch_en),
+    .en(glitch_en),
     .trigger(delay_rdy),
     .valid(trigger_valid)
 );
@@ -183,8 +183,8 @@ resetter #(
     .cycles(60)
     ) rsti(
     .clk(clk),
-    .rst(board_rst || rst),
-    .rst_out(board1_rst)
+    .rst(board_rst || rst || glitch_en),
+    .rst_out(o_board_rst)
 );
 
 assign vout = pulse_rdy ? pwm_out : pulse_o;

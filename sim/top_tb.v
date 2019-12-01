@@ -5,12 +5,12 @@ module top_tb();
 reg tb_clk = 1'b1;
 
 wire tb_uart;
-wire board1_rst;
+wire board_rst;
 
 top tb_top (
     .ext_clk(tb_clk),
     .ftdi_rx(tb_uart),
-    .board1_rst(board1_rst)
+    .o_board_rst(board_rst)
 );
 
 initial
@@ -393,7 +393,7 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
 
-    wait(board1_rst);
+    wait(board_rst);
     #80000 $finish;
 end
 
