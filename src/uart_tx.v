@@ -85,7 +85,7 @@ begin
                     dout <= 1'b0;
                     data <= data_in;
                     state <= UART_DATA;
-                    etu_cnt <= 9'd0;
+                    etu_cnt <= 10'd0;
                     bit_cnt <= 3'd0;
                     rdy <= 1'b0;
                 end
@@ -95,7 +95,7 @@ begin
             UART_DATA:
             if(etu_full)
             begin
-                etu_cnt <= 9'd0;
+                etu_cnt <= 10'd0;
                 bit_cnt <= (bit_cnt + 1'b1);
 
                 dout <= data[0];
@@ -111,7 +111,7 @@ begin
             UART_STOP:
             if(etu_full)
             begin
-                etu_cnt <= 9'd0;
+                etu_cnt <= 10'd0;
                 dout <= 1'b1;
                 state <= UART_IDLE;
             end

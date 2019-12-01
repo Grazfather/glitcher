@@ -203,6 +203,8 @@ begin
                         begin
                             rst <= 1'b1;
                         end
+                        default:
+                            $display ("cmd: Invalid command byte 0x%X", rx_data);
                     endcase
                 end
             end
@@ -308,6 +310,8 @@ begin
                     state <= STATE_IDLE;
                 end
             end
+            default:
+                $display ("cmd: Invalid state 0x%X", state);
         endcase
     end
 end

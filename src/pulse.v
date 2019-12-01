@@ -96,6 +96,8 @@ always @(posedge clk) begin
                     end
                 end
             end
+            default:
+                $display ("cmd: Invalid state 0x%X", state);
         endcase
     end
 end
