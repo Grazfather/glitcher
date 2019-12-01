@@ -5,10 +5,12 @@ module top_tb();
 reg tb_clk = 1'b1;
 
 wire tb_uart;
+wire board1_rst;
 
 top tb_top (
-    .clk(tb_clk),
-    .ftdi_rx(tb_uart)
+    .ext_clk(tb_clk),
+    .ftdi_rx(tb_uart),
+    .board1_rst(board1_rst)
 );
 
 initial
@@ -100,8 +102,8 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
     @(posedge tb_clk);
-    // -- width 0x22
-    tx_data <= 8'h22;
+    // -- width value
+    tx_data <= 8'h02;
     tx_en <= 1'b1;
     @(posedge tb_clk);
     tx_en <= 1'b0;
@@ -162,8 +164,8 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
     @(posedge tb_clk);
-    // -- delay 50
-    tx_data <= 8'h32;
+    // -- delay 200
+    tx_data <= 8'd200;
     tx_en <= 1'b1;
     @(posedge tb_clk);
     tx_en <= 1'b0;
@@ -185,6 +187,27 @@ begin
     @(posedge tb_clk);
     //-- cmd glitch enable
     tx_data <= 8'hfc;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    // send "?" through
+    #1000
+    @(posedge tb_clk);
+    // -- length 1
+    tx_data <= 8'h01;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    @(posedge tb_clk);
+    tx_data <= 8'h3f; // '?'
     tx_en <= 1'b1;
     @(posedge tb_clk);
     tx_en <= 1'b0;
@@ -330,15 +353,6 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
 
-    @(posedge tb_clk);
-    tx_data <= 8'h00;
-    tx_en <= 1'b1;
-    @(posedge tb_clk);
-    tx_en <= 1'b0;
-    wait(!tx_rdy);
-    @(posedge tb_clk);
-    wait(tx_rdy);
-
     // Reset board
     @(posedge tb_clk);
     // -- cmd
@@ -359,7 +373,28 @@ begin
     @(posedge tb_clk);
     wait(tx_rdy);
 
-    #8000 $finish;
+    // Glitch enable
+    @(posedge tb_clk);
+    // -- cmd
+    tx_data <= 8'h00;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+    @(posedge tb_clk);
+    //-- cmd glith enable
+    tx_data <= 8'hfc;
+    tx_en <= 1'b1;
+    @(posedge tb_clk);
+    tx_en <= 1'b0;
+    wait(!tx_rdy);
+    @(posedge tb_clk);
+    wait(tx_rdy);
+
+    wait(board1_rst);
+    #80000 $finish;
 end
 
 endmodule

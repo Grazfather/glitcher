@@ -33,7 +33,7 @@
 
 module top
 (
-    input wire          clk,
+    input wire          ext_clk,
     input wire          ftdi_rx,
     output wire         ftdi_tx,
     input wire          board1_rx,
@@ -41,8 +41,10 @@ module top
     output wire         board1_rst,
     output wire         LEDR_N,
     output wire         LEDG_N,
-    output wire [6:0]   seg,
-    output wire         ca,
+    output wire [6:0]   seg0,
+    output wire         ca0,
+    output wire [6:0]   seg1,
+    output wire         ca1,
     output wire         vout
 );
 
@@ -51,25 +53,56 @@ module top
 assign ftdi_tx = board1_rx;
 
 // High nibble
-nibble_to_seven_seg segi1 (
-    .nibblein(delay[7:4]),
-    .segout(nib1)
+nibble_to_seven_seg segi0_1 (
+    .nibblein(pulse_width[7:4]),
+    .segout(nib0_1)
 );
 
 // Low nibble
-nibble_to_seven_seg segi0 (
-    .nibblein(delay[3:0]),
-    .segout(nib0)
+nibble_to_seven_seg segi0_0 (
+    .nibblein(pulse_width[3:0]),
+    .segout(nib0_0)
 );
 
-wire [6:0] nib0, nib1;
+wire [6:0] nib0_0, nib0_1;
 
-seven_seg_mux dmuxi (
+seven_seg_mux dmuxi0 (
     .clk(clk),
-    .disp0(nib0),
-    .disp1(nib1),
-    .segout(seg),
-    .disp_sel(ca)
+    .disp0(nib0_0),
+    .disp1(nib0_1),
+    .segout(seg0),
+    .disp_sel(ca0)
+);
+
+// High nibble
+nibble_to_seven_seg segi1_1 (
+    .nibblein(delay[7:4]),
+    .segout(nib1_1)
+);
+
+// Low nibble
+nibble_to_seven_seg segi1_0 (
+    .nibblein(delay[3:0]),
+    .segout(nib1_0)
+);
+
+wire [6:0] nib1_0, nib1_1;
+
+seven_seg_mux dmuxi1 (
+    .clk(clk),
+    .disp0(nib1_0),
+    .disp1(nib1_1),
+    .segout(seg1),
+    .disp_sel(ca1)
+);
+
+// Use a 4x PLL so we have better granularity in our pulse width
+wire clk;
+wire fast_clk;
+pll plli (
+    .clk_in(ext_clk),
+    .clk_out(clk),
+    .fast_clk_out(fast_clk)
 );
 
 assign LEDG_N = board1_tx;
@@ -137,7 +170,7 @@ wire pulse_o;
 wire pulse_rdy;
 
 pulse pulsei (
-    .clk(clk),
+    .clk(fast_clk),
     .rst(rst),
     .en(trigger_valid),
     .width_in(pulse_width),

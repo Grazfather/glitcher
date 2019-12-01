@@ -1,11 +1,11 @@
 
 all: $(PROJ).rpt $(PROJ).bin
 
-%.blif: $(ADD_SRC) $(ADD_DEPS)
-	yosys -ql $*.log -p 'synth_ice40 -top top -blif $@' $(ADD_SRC)
+%.blif: $(ADD_SRC) $(ADD_DEPS) $(ADD_BOARD_SRC)
+	yosys -ql $*.log -p 'synth_ice40 -top top -blif $@' $(ADD_SRC) $(ADD_BOARD_SRC)
 
-%.json: $(ADD_SRC) $(ADD_DEPS)
-	yosys -ql $*.log -p 'synth_ice40 -top top -json $@' $(ADD_SRC)
+%.json: $(ADD_SRC) $(ADD_DEPS) $(ADD_BOARD_SRC)
+	yosys -ql $*.log -p 'synth_ice40 -top top -json $@' $(ADD_SRC) $(ADD_BOARD_SRC)
 
 ifeq ($(USE_ARACHNEPNR),)
 %.asc: $(PIN_DEF) %.json
@@ -22,7 +22,7 @@ endif
 %.rpt: %.asc
 	icetime -d $(DEVICE) -mtr $@ $<
 
-%_tb: sim/%_tb.v $(ADD_SRC)
+%_tb: sim/%_tb.v $(ADD_SRC) $(ADD_TB_SRC)
 	iverilog -o $@ $^
 
 %_tb.vcd: %_tb

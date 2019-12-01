@@ -1,5 +1,5 @@
 # 12 MHz clock
-set_io -nowarn clk        35
+set_io -nowarn ext_clk    35
 set_io -nowarn rst        10
 
 # RS232
@@ -70,24 +70,24 @@ set_io -nowarn led[2]     25
 set_io -nowarn led[3]     23
 set_io -nowarn led[4]     21
 
-# 7 Segment on PMOD 1A
-set_io -nowarn 7SAA        4
-set_io -nowarn 7SAE        2
-set_io -nowarn 7SAB       47
-set_io -nowarn 7SAF       45
-set_io -nowarn 7SAC        3
-set_io -nowarn 7SAG       48
-set_io -nowarn 7SAD       46
-set_io -nowarn 7SCA       44
+# 7 Segment on PMOD 1A and 1B
+set_io -nowarn seg0[0]      4
+set_io -nowarn seg0[1]      2
+set_io -nowarn seg0[2]     47
+set_io -nowarn seg0[3]     45
+set_io -nowarn seg0[4]      3
+set_io -nowarn seg0[5]     48
+set_io -nowarn seg0[6]     46
+set_io -nowarn ca0         44
 
-set_io -nowarn seg[0]      4
-set_io -nowarn seg[1]      2
-set_io -nowarn seg[2]     47
-set_io -nowarn seg[3]     45
-set_io -nowarn seg[4]      3
-set_io -nowarn seg[5]     48
-set_io -nowarn seg[6]     46
-set_io -nowarn ca         44
+set_io -nowarn seg1[0]    43
+set_io -nowarn seg1[1]    38
+set_io -nowarn seg1[2]    34
+set_io -nowarn seg1[3]    31
+set_io -nowarn seg1[4]    42
+set_io -nowarn seg1[5]    36
+set_io -nowarn seg1[6]    32
+set_io -nowarn ca1        28
 
 # FTDI
 set_io -nowarn ftdi_rx   6
