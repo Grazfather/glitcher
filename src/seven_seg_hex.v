@@ -1,4 +1,6 @@
 `timescale 1ns / 1ps
+`default_nettype none
+
 //module name and inputs/outputs
 module nibble_to_seven_seg(
     input [3:0] nibblein,

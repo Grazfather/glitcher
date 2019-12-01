@@ -1,8 +1,11 @@
+`default_nettype none
+
 module resetter (
     input wire clk,
     input wire rst,
     output reg rst_out
 );
+
 // 120 cycles at 12MHz = 10uS
 parameter cycles = 120;
 

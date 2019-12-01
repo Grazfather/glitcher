@@ -31,6 +31,7 @@
  * Author: Dmitry Nedospasov <dmitry@toothless.co>
  *
  */
+`default_nettype none
 
 module  uart_rx (
     input wire          clk,

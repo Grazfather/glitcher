@@ -1,3 +1,5 @@
+`default_nettype none
+
 `define SYSTEM_CLOCK    12_000_000
 
 // 115200 8N1

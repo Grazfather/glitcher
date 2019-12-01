@@ -29,6 +29,7 @@
  * Author: Dmitry Nedospasov <dmitry@toothless.co>
  *
  */
+`default_nettype none
 
 module trigger (
     input wire clk,
