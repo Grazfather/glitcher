@@ -41,15 +41,19 @@ module pulse(
     output reg pulse_rdy = 1'b1
 );
 
-parameter STATE_IDLE = 1'b0;
-parameter STATE_RUN = 1'b1;
+parameter STATE_IDLE = 2'd0;
+parameter STATE_RUN = 2'd1;
+parameter STATE_WAIT_NO_ENABLE = 2'd2;
 
-reg state = STATE_IDLE;
+reg [1:0] state = STATE_IDLE;
 
 reg [7:0] width_data;
 reg [7:0] width;
 reg [7:0] cnt_data;
 reg [7:0] cnt;
+
+// Because of the state change, the width takes one more cycle that its
+// setting. At 12MHz this matters.
 
 always @(posedge clk) begin
     if (rst)
@@ -75,7 +79,7 @@ always @(posedge clk) begin
                 begin
                     state <= STATE_RUN;
                     width_data <= width_in;
-                    width <= 8'd0;
+                    width <= 8'd1;
                     cnt_data <= cnt_in;
                     cnt <= 8'd0;
                     pulse_o <= 1'b0;
@@ -90,10 +94,17 @@ always @(posedge clk) begin
                     cnt <= cnt + 1'b1;
                     if(cnt == cnt_data)
                     begin
-                        state <= STATE_IDLE;
+                        state <= STATE_WAIT_NO_ENABLE;
                         pulse_o <= 1'b1;
                         pulse_rdy <= 1'b1;
                     end
+                end
+            end
+            STATE_WAIT_NO_ENABLE:
+            begin
+                if(!en)
+                begin
+                    state <= STATE_IDLE;
                 end
             end
             default:
