@@ -179,7 +179,9 @@ pulse pulsei (
     .pulse_rdy(pulse_rdy)
 );
 
-resetter rsti (
+resetter #(
+    .cycles(60)
+    ) rsti(
     .clk(clk),
     .rst(board_rst || rst),
     .rst_out(board1_rst)
