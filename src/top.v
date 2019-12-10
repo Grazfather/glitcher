@@ -67,7 +67,7 @@ nibble_to_seven_seg segi0_0 (
 wire [6:0] nib0_0, nib0_1;
 
 seven_seg_mux dmuxi0 (
-    .clk(clk),
+    .clk(ext_clk),
     .disp0(nib0_0),
     .disp1(nib0_1),
     .segout(seg0),
@@ -89,20 +89,11 @@ nibble_to_seven_seg segi1_0 (
 wire [6:0] nib1_0, nib1_1;
 
 seven_seg_mux dmuxi1 (
-    .clk(clk),
+    .clk(ext_clk),
     .disp0(nib1_0),
     .disp1(nib1_1),
     .segout(seg1),
     .disp_sel(ca1)
-);
-
-// Use a 4x PLL so we have better granularity in our pulse width
-wire clk;
-wire fast_clk;
-pll plli (
-    .clk_in(ext_clk),
-    .clk_out(clk),
-    .fast_clk_out(fast_clk)
 );
 
 assign LEDG_N = o_board_tx;
@@ -122,7 +113,7 @@ assign o_board_tx = passthrough ? ftdi_rx : dout;
 // Receives commands from host uart and parses out commands intended for the
 // glitcher, passing through everything else
 cmd cmdi (
-    .clk(clk),
+    .clk(ext_clk),
     .din(ftdi_rx),
     .dout(dout),
     .board_rst(board_rst),
@@ -138,7 +129,7 @@ cmd cmdi (
 wire pwm_out;
 
 pattern pwmi (
-    .clk(clk),
+    .clk(ext_clk),
     .rst(rst),
     .en(1'b1),
     .pattern(pwm),
@@ -149,7 +140,7 @@ pattern pwmi (
 wire delay_rdy;
 
 delay delayi (
-    .clk(clk),
+    .clk(ext_clk),
     .rst(rst),
     .en(glitch_en),
     .delay(delay),
@@ -159,7 +150,7 @@ delay delayi (
 wire trigger_valid;
 
 trigger triggeri (
-    .clk(clk),
+    .clk(ext_clk),
     .rst(rst),
     .en(glitch_en),
     .trigger(delay_rdy),
@@ -170,7 +161,7 @@ wire pulse_o;
 wire pulse_rdy;
 
 pulse pulsei (
-    .clk(fast_clk),
+    .clk(ext_clk),
     .rst(rst),
     .en(trigger_valid),
     .width_in(pulse_width),
@@ -182,7 +173,7 @@ pulse pulsei (
 resetter #(
     .cycles(60)
     ) rsti(
-    .clk(clk),
+    .clk(ext_clk),
     .rst(board_rst || rst || glitch_en),
     .rst_out(o_board_rst)
 );
