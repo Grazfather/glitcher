@@ -57,7 +57,7 @@ begin
     else
     begin
         state <= state;
-        rdy <= rdy;
+        rdy <= 1'b0;
         cnt <= cnt + 1'b1;
 
         case(state)
